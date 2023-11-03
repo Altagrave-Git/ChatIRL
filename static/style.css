@@ -1,0 +1,41 @@
+* {
+  font-family: "DM Sans", sans-serif;
+}
+html {
+  font-size: 75%;
+}
+@media (min-width: 576px) {
+  html {
+    font-size: 80%;
+  }
+}
+@media (min-width: 768px) {
+  html {
+    font-size: 85%;
+  }
+}
+@media (min-width: 992px) {
+  html {
+    font-size: 90%;
+  }
+}
+@media (min-width: 1200px) {
+  html {
+    font-size: 95%;
+  }
+}
+@media (min-width: 1400px) {
+  html {
+    font-size: 100%
+  }
+}
+main {
+    padding-top: 3.6rem;
+}
+a {
+  text-decoration: none;
+  color: unset;
+}
+.hidden {
+  display: none !important;
+}

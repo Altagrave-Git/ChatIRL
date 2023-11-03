@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}
+    Home
+{% endblock %}
+
+{% block main %}
+    <div class="pt-4 container-fluid px-0">
+        {% if sticky %}
+            {% for room in sticky %}
+            <div class="row">
+                <a class="col-12 col-md-10 col-lg-8 col-xl-6 mx-auto" href="/room/{{room.slug}}/">
+                    <div class="py-2 bg-light border border-primary rounded mx-auto">
+                        <h6 class="mb-0 text-primary">{{room.title}}</h6>
+                        {% if room.last_message %}
+                            <p class="mb-0 text-secondary">{{room.last_message}}</p>
+                        {% else %}
+                            <p class="mb-0 text-secondary">No messages...</p>
+                        {% endif %}
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        {% endif %}
+        {% if member %}
+            {% for room in member %}
+            <div class="row">
+                <a class="col-12 col-md-10 col-lg-8 col-xl-6 mx-auto" href="/room/{{room.slug}}/">
+                    <div class="py-2 bg-light border border-warning rounded mx-auto">
+                        <h6 class="mb-0 text-warning">{{room.title}}</h6>
+                        {% if room.last_message %}
+                            <p class="mb-0 text-secondary">{{room.last_message}}</p>
+                        {% else %}
+                            <p class="mb-0 text-secondary">No messages...</p>
+                        {% endif %}
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+{% endblock %}

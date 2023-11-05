@@ -32,14 +32,14 @@ class ChatRoom(models.Model):
 
 
 class ChatMessage(models.Model):
-    text = models.TextField()
+    text = models.TextField(max_length=280)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='messages')
     room = models.ForeignKey(ChatRoom, on_delete=models.CASCADE, related_name='messages')
 
     def __str__(self):
-        return self.title
+        return self.text
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)

@@ -3,6 +3,8 @@ from django.contrib.auth.hashers import check_password
 from django.contrib import messages
 from users.models import User
 from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
+from users.serializers import UserSerializer
 
 
 def login_view(request):
@@ -70,3 +72,40 @@ def signup_view(request):
         
     else:
         return render(request, 'users/registration.html')
+    
+
+@login_required
+def profile_view(request, username):
+    try:
+        user = User.objects.get(username=username)
+    except:
+        return redirect('home')
+    
+    context = {
+        'user': UserSerializer(user).data
+    }
+
+    if request.method == 'POST':
+        if user == request.user:
+            new_username = request.POST.get('new_username')
+            color = request.POST.get('color')
+
+            if not new_username or not color:
+                messages.error(request, 'Fields cannot be empty')
+                return redirect('profile', username=username)
+            
+            if new_username != username:
+                user_check = User.objects.filter(username=new_username)
+                if user_check.exists():
+                    messages.error(request, 'Username taken')
+                    return redirect('profile', username=username)
+                
+            user.color = color
+            user.username = new_username
+            user.save()
+            return redirect('home')
+
+        else:
+            return redirect('home')
+
+    return render(request, 'users/profile.html', context=context)

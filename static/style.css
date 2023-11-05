@@ -1,3 +1,15 @@
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #f8f9fa;
+}
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
 * {
   font-family: "DM Sans", sans-serif;
 }
@@ -38,4 +50,79 @@ a {
 }
 .hidden {
   display: none !important;
+}
+.chat-room-message {
+  max-width: 75%;
+}
+#user-list-container,
+#room-list-container {
+  position: sticky;
+  top: 3.6rem;
+  max-height: calc(100vh - 3.6rem);
+  overflow-y: scroll;
+}
+.bubble-blue {
+  background-color: #0d6efd;
+}
+.bubble-light-blue {
+  background-color: #cfe2ff;
+}
+.bubble-gray {
+  background-color: #6c757d;
+}
+.bubble-green {
+  background-color: #198754;
+}
+.bubble-light-green {
+  background-color: #d1e7dd;
+}
+.bubble-yellow {
+  background-color: #ffc107;
+}
+.bubble-light-yellow {
+  background-color: #fff3cd;
+}
+.bubble-red {
+  background-color: #dc3545;
+}
+.bubble-light-red {
+  background-color: #f8d7da;
+}
+.bubble-white {
+  background-color: #f6f7f8;
+}
+.bubble-black {
+  background-color: #22262a;
+}
+.bubble-blue > div,
+.bubble-black > div,
+.bubble-gray > div,
+.bubble-green > div,
+.bubble-red > div {
+  color: #fffc;
+  font-weight: 600;
+}
+.bubble-blue > p,
+.bubble-black > p,
+.bubble-gray > p,
+.bubble-green > p,
+.bubble-red > p {
+  color: #fff
+}
+.bubble-light-blue > div,
+.bubble-light-green > div,
+.bubble-light-red > div,
+.bubble-light-yellow > div,
+.bubble-yellow > div,
+.bubble-white > div {
+  color: #0008;
+  font-weight: 600;
+}
+.bubble-light-blue > p,
+.bubble-light-green > p,
+.bubble-light-red > p,
+.bubble-light-yellow > p,
+.bubble-yellow > p,
+.bubble-white > p {
+  color:  #000
 }

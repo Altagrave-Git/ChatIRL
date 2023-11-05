@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from chat.models import ChatRoom
-from chat.serializers import ChatRoomSerializer
+from chat.models import ChatRoom, ChatMessage
+from chat.serializers import ChatRoomSerializer, ChatMessageSerializer
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.template.defaultfilters import slugify
@@ -49,6 +49,20 @@ def room_view(request, slug):
     except:
         return redirect('home')
     
-    serializer = ChatRoomSerializer(room)
-    context = serializer.data
+    room_serializer = ChatRoomSerializer(room)
+    room_messages = room.messages.all()
+    if len(room_messages) > 50:
+        room_messages.order_by('-id')[50:].delete()
+    message_serializer = ChatMessageSerializer(room_messages, many=True)
+
+    sticky = ChatRoom.objects.filter(sticky=True)
+    member = ChatRoom.objects.filter(users=request.user).exclude(sticky=True)
+    
+    context = {
+        "chat_room": room_serializer.data,
+        "chat_messages": message_serializer.data,
+        "sticky": ChatRoomSerializer(sticky, many=True).data,
+        "member": ChatRoomSerializer(member, many=True).data
+    }
+
     return render(request, 'chat/room.html', context=context)

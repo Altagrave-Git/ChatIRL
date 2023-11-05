@@ -27,6 +27,20 @@ class UserManager(BaseUserManager):
         return user
 
 
+COLORS_CHOICES = [
+    ('blue', 'Blue'),
+    ('light-blue', 'Light Blue'),
+    ('yellow', 'Yellow'),
+    ('light-yellow', 'Light Yellow'),
+    ('red', 'Red'),
+    ('light-red', 'Light Red'),
+    ('green', 'Green'),
+    ('light-green', 'Light Green'),
+    ('gray', 'Gray'),
+    ('black', 'Black'),
+    ('white', 'White')
+]
+
 class User(AbstractBaseUser):
     email = models.EmailField(
         verbose_name="email address",
@@ -34,6 +48,7 @@ class User(AbstractBaseUser):
         unique=True,
     )
     username = models.CharField(max_length=100, unique=True)
+    color = models.CharField(max_length=20, choices=COLORS_CHOICES, default='light-blue')
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
 

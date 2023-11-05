@@ -9,6 +9,9 @@ class ChatRoomSerializer(serializers.ModelSerializer):
 
 
 class ChatMessageSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username', read_only=True)
+    color = serializers.CharField(source='user.color', read_only=True)
+
     class Meta:
         model = ChatMessage
-        fields = ['id', 'text', 'timestamp', 'user', 'room']
+        fields = ['id', 'text', 'timestamp', 'user', 'room', 'username', 'color']

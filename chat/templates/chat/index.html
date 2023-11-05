@@ -8,7 +8,7 @@
         {% if sticky %}
             {% for room in sticky %}
             <div class="row">
-                <a class="col-12 col-md-10 col-lg-8 col-xl-6 mx-auto" href="/room/{{room.slug}}/">
+                <a class="col-12 col-md-10 col-lg-8 col-xl-6 mx-auto mt-2" href="/room/{{room.slug}}/">
                     <div class="py-2 bg-light border border-primary rounded mx-auto">
                         <h6 class="mb-0 text-primary">{{room.title}}</h6>
                         {% if room.last_message %}
@@ -24,7 +24,7 @@
         {% if member %}
             {% for room in member %}
             <div class="row">
-                <a class="col-12 col-md-10 col-lg-8 col-xl-6 mx-auto" href="/room/{{room.slug}}/">
+                <a class="col-12 col-md-10 col-lg-8 col-xl-6 mx-auto mt-2" href="/room/{{room.slug}}/">
                     <div class="py-2 bg-light border border-warning rounded mx-auto">
                         <h6 class="mb-0 text-warning">{{room.title}}</h6>
                         {% if room.last_message %}

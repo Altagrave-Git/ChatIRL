@@ -19,22 +19,25 @@
     <script src="https://kit.fontawesome.com/ee788ab8f2.js" crossorigin="anonymous"></script>
   </head>
 
-  <body>
-    <nav class="navbar navbar-expand-md bg-light navbar-light border position-fixed w-100">
+  <body class="bg-light">
+    <nav class="navbar navbar-expand-md bg-dark bg-gradient navbar-dark border-bottom border-2 border-secondary position-fixed w-100 py-1 shadow">
       <div class="container">
         <a class="navbar-brand" href="{% url 'home' %}">
-          <img src="{% static 'icon.svg' %}" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+          <img style="filter: invert(1)" src="{% static 'icon.svg' %}" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
           Chat IRL
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto">
+          <ul class="navbar-nav ms-auto">
             <li class="nav-item">
               <a class="nav-link" href="{% url 'home' %}">Chat</a>
             </li>
             {% if request.user.is_authenticated %}
+            <li class="nav-item">
+              <a href="{% url 'private_list' %}" class="nav-link">Private</a>
+            </li>
             <li class="nav-item">
               <a href="/users/u/{{request.user.username}}/" class="nav-link">Profile</a>
             </li>

@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% block title %}
+    Private Chat
+{% endblock %}
+
+{% block main %}
+    <section class="col-lg-3"></section>
+    <section class="col-12 col-lg-6 d-flex flex-column flex-grow-1 pb-5">
+        <div class="flex-grow-1 d-flex flex-column px-2 pb-3" id="chat-log">
+            {% for message in chat_messages %}
+                {% if message.username == request.user.username %}
+                    <div class="chat-room-message message-self align-self-end my-1 px-3 py-2 rounded bubble-{{message.color}}">
+                        <div class="message-username text-end text-secondary">{{message.username}}</div>
+                        <p class="mb-0 text-end">{{message.text}}</p>
+                    </div>
+                {% else %}
+                    <div class="chat-room-message message-user align-self-start my-1 px-3 py-2 rounded bubble-{{message.color}}">
+                        <div class="message-username text-start text-secondary">{{message.username}}</div>
+                        <p class="mb-0 text-start">{{message.text}}</p>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <div class="fixed-bottom container">
+            <div class="col-lg-6 mx-auto bg-light py-2 px-3 d-flex rounded">
+                <input class="form-control me-2" type="text" name="message" id="message" maxlength="280">
+                <button class="btn btn-warning" id="submit">Send</button>
+            </div>
+        </div>
+    </section>
+    <section class="col-lg-3"></section>
+
+    <script>
+        const scrollToEnd = () => {
+            window.scrollTo(0, document.body.scrollHeight);
+        }
+
+        window.addEventListener('load', scrollToEnd);
+
+        const chatSocket = new WebSocket(`ws://${window.location.host}/ws/private/{{target_user.username}}/`);
+
+        const user = '{{request.user.username}}';
+
+        chatSocket.onmessage = function (e) {
+            const data = JSON.parse(e.data);
+
+            if (data.action == 'message') {
+                const log = document.getElementById('chat-log');
+
+                if (data.user == user) {
+                    log.innerHTML += `
+                    <div class="message-self align-self-end my-1 px-3 py-2 rounded bubble-${data.color}">
+                        <div class="message-username text-end">${data.user}</div>
+                        <p class="mb-0 text-end">${data.message}</p>
+                    </div>  
+                    `
+                } else {
+                    log.innerHTML += `
+                    <div class="message-user align-self-start my-1 px-3 py-2 rounded bubble-${data.color}">
+                        <div class="message-username text-start">${data.user}</div>
+                        <p class="mb-0 text-start">${data.message}</p>
+                    </div>
+                    `
+                }
+                scrollToEnd();
+            }
+        }
+
+        chatSocket.onclose = function (e) {
+            console.error('Chat socket closed unexpectedly');
+        }
+
+        document.querySelector('#message').focus();
+        document.querySelector('#message').onkeyup = function(e) {
+            if (e.key === 'Enter') {
+                document.querySelector('#submit').click();
+            }
+        };
+    
+        document.querySelector('#submit').onclick = function(e) {
+            const messageInputDom = document.querySelector('#message');
+            const message = messageInputDom.value;
+            chatSocket.send(JSON.stringify({
+                'message': message
+            }));
+            messageInputDom.value = '';
+        };
+    </script>
+{% endblock %}

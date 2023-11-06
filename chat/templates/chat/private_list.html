@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}
+    Private Chats
+{% endblock %}
+
+{% block main %}
+    <div class="container-fluid px-0">
+        {% if private_rooms %}
+            {% for room in private_rooms %}
+                <div class="row">
+                    {% for username in room.usernames %}
+                        {% if username != request.user.username %}
+                        <a href="{% url 'private_list' %}{{username}}">
+                            <div class="rounded bg-light">
+                                <h6>{{username}}</h6>
+                                <p>{{room.last_message}}</p>
+                            </div>
+                        </a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        {% else %}
+
+        {% endif %}
+    </div>
+{% endblock %}

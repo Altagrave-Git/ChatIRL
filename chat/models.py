@@ -8,6 +8,7 @@ import hashlib
 class ChatRoom(models.Model):
     title = models.CharField(max_length=120, unique=True)
     slug = models.SlugField(max_length=120, unique=True, null=True, blank=True)
+    description = models.CharField(max_length=200)
     last_message = models.TextField(max_length=280, null=True, blank=True)
     timestamp = models.DateTimeField(null=True, blank=True)
     sticky = models.BooleanField(default=False)
@@ -41,6 +42,34 @@ class ChatMessage(models.Model):
     def __str__(self):
         return self.text
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        room = self.room
+        room.last_message = f'{self.user.username}: {self.text}'[:50]
+        room.timestamp = self.timestamp
+        room.save()
+        return self
+    
+
+class PrivateChat(models.Model):
+    last_message = models.CharField(max_length=280, null=True, blank=True)
+    users = models.ManyToManyField(User, related_name='private')
+    timestamp = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return str(self.id)
+    
+
+class PrivateMessage(models.Model):
+    text = models.TextField(max_length=280)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    room = models.ForeignKey(PrivateChat, on_delete=models.CASCADE, related_name='messages')
+
+    def __str__(self):
+        return self.text
+    
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         room = self.room

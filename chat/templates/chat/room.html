@@ -4,13 +4,13 @@
 {% endblock %}
 
 {% block main %}
-    <section class="col-lg-3">
-        <div id="room-list-container">
+    <section class="col-lg-3 border-1 border-end">
+        <div class="p-0" id="room-list-container">
             <h6 class="text-secondary text-start ms-2 mt-2">Chat Rooms</h6>
             {% if sticky %}
                 {% for room in sticky %}
                     <a href="/room/{{room.slug}}/">
-                        <div class="border border-1 border-primary rounded py-3 mt-2 mx-2 bg-light">
+                        <div class="border border-1 border-secondary-subtle rounded py-3 mt-2 mx-2 bg-white shadow-sm">
                             <h6 class="text-primary mb-0">{{room.title}}</h6>
                         </div>
                     </a>
@@ -19,7 +19,7 @@
             {% if member %}
                 {% for room in member %}
                     <a href="/room/{{room.slug}}/">
-                        <div class="border border-1 border-warning rounded py-3 mt-2 mx-2 bg-light">
+                        <div class="border border-1 border-secondary-subtle rounded py-3 mt-2 mx-2 bg-white shadow-sm">
                             <h6 class="text-warning mb-0">{{room.title}}</h6>
                         </div>
                     </a>
@@ -28,7 +28,7 @@
         </div>
     </section>
 
-    <section class="col-12 col-lg-6 d-flex flex-column flex-grow-1 pb-5">
+    <section class="col-12 col-lg-6 d-flex flex-column flex-grow-1 pb-5 bg-white">
         <div class="flex-grow-1 d-flex flex-column px-2 pb-3" id="chat-log">
             {% for message in chat_messages %}
                 {% if message.username == request.user.username %}
@@ -46,7 +46,7 @@
         </div>
 
         <div class="fixed-bottom container">
-            <div class="col-lg-6 mx-auto bg-light py-2 px-3 d-flex">
+            <div class="col-lg-6 mx-auto bg-light py-2 px-3 d-flex rounded">
                 <input class="form-control me-2" type="text" name="message" id="message" maxlength="280">
                 <button class="btn btn-warning" id="submit">Send</button>
             </div>
@@ -57,7 +57,7 @@
         <table class="table table-hover mb-0" id="user-list-container">
             <thead>
                 <tr>
-                    <th class="col text-secondary text-start bg-light">Online</th>
+                    <th class="col text-secondary text-start bg-secondary-subtle bg-gradient text-secondary">Online</th>
                 </tr>
             </thead>
             <tbody id="user-list">
@@ -86,7 +86,7 @@
 
             if (data.action == 'message') {
                 const log = document.querySelector('#chat-log');
-                let msgAlign;
+
                 if (data.user == user) {
                     log.innerHTML += `
                     <div class="message-self align-self-end my-1 px-3 py-2 rounded bubble-${data.color}">

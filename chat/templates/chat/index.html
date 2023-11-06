@@ -4,38 +4,57 @@
 {% endblock %}
 
 {% block main %}
-    <div class="pt-4 container-fluid px-0">
-        {% if sticky %}
-            {% for room in sticky %}
-            <div class="row">
-                <a class="col-12 col-md-10 col-lg-8 col-xl-6 mx-auto mt-2" href="/room/{{room.slug}}/">
-                    <div class="py-2 bg-light border border-primary rounded mx-auto">
-                        <h6 class="mb-0 text-primary">{{room.title}}</h6>
-                        {% if room.last_message %}
-                            <p class="mb-0 text-secondary">{{room.last_message}}</p>
-                        {% else %}
-                            <p class="mb-0 text-secondary">No messages...</p>
-                        {% endif %}
-                    </div>
-                </a>
+    <div class="pt-1 container-fluid px-0 d-flex flex-column flex-lg-row">
+        <div class="col-12 col-lg-6 px-lg-3">
+            {% if sticky %}
+                {% for room in sticky %}
+                <div class="row">
+                    <a class="mx-auto mt-3" href="/room/{{room.slug}}/">
+                        <div class="border border-secondary-subtle rounded mx-auto bg-white shadow">
+                            <h5 class="mb-0 pt-2 text-primary">{{room.title}}</h5>
+                            <p class="mb-0 text-secondary pb-1">{{room.description}}</p>
+                            {% if room.last_message %}
+                                <div class="border-top rounded border-1 border-secondary-subtle py-1 m-0 bg-secondary-subtle bg-gradient text-secondary px-2">
+                                    {{room.last_message}}
+                                </div>
+                            {% else %}
+                                <div class="border-top rounded border-1 border-secondary-subtle py-1 m-0 bg-secondary-subtle bg-gradient text-secondary">
+                                    No messages...
+                                </div>
+                            {% endif %}
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="col-12 col-lg-6 px-lg-3">
+            <div class="d-flex align-items-center mt-2">
+                <hr class="flex-grow-1">
+                <div class="mx-2">Rooms by Users</div>
+                <hr class="flex-grow-1">
             </div>
-            {% endfor %}
-        {% endif %}
-        {% if member %}
-            {% for room in member %}
-            <div class="row">
-                <a class="col-12 col-md-10 col-lg-8 col-xl-6 mx-auto mt-2" href="/room/{{room.slug}}/">
-                    <div class="py-2 bg-light border border-warning rounded mx-auto">
-                        <h6 class="mb-0 text-warning">{{room.title}}</h6>
-                        {% if room.last_message %}
-                            <p class="mb-0 text-secondary">{{room.last_message}}</p>
-                        {% else %}
-                            <p class="mb-0 text-secondary">No messages...</p>
-                        {% endif %}
-                    </div>
-                </a>
-            </div>
-            {% endfor %}
-        {% endif %}
+            {% if member %}
+                {% for room in member %}
+                <div class="row">
+                    <a class="mx-auto mt-2" href="/room/{{room.slug}}/">
+                        <div class="border border-secondary-subtle rounded mx-auto bg-white shadow">
+                            <h5 class="mb-0 pt-2 text-warning">{{room.title}}</h5>
+                            <p class="mb-0 text-secondary pb-1">{{room.description}}</p>
+                            {% if room.last_message %}
+                                <div class="border-top rounded border-1 border-secondary-subtle py-1 m-0 bg-secondary-subtle bg-gradient text-secondary px-2">
+                                    {{room.last_message}}
+                                </div>
+                            {% else %}
+                                <div class="border-top rounded border-1 border-secondary-subtle py-1 m-0 bg-secondary-subtle bg-gradient text-secondary">
+                                    No messages...
+                                </div>
+                            {% endif %}
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            {% endif %}
+        </div>
     </div>
 {% endblock %}

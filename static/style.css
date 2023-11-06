@@ -2,7 +2,7 @@
   width: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #f8f9fa;
+  background: #0000;
 }
 ::-webkit-scrollbar-thumb {
   background: #888;
@@ -42,7 +42,7 @@ html {
   }
 }
 main {
-    padding-top: 3.6rem;
+    padding-top: 3.2rem;
 }
 a {
   text-decoration: none;
@@ -57,7 +57,7 @@ a {
 #user-list-container,
 #room-list-container {
   position: sticky;
-  top: 3.6rem;
+  top: 3.2rem;
   max-height: calc(100vh - 3.6rem);
   overflow-y: scroll;
 }

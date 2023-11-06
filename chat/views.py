@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
-from chat.models import ChatRoom, ChatMessage
-from chat.serializers import ChatRoomSerializer, ChatMessageSerializer
+from users.models import User
+from users.serializers import UserSerializer
+from chat.models import ChatRoom, ChatMessage, PrivateChat, PrivateMessage
+from chat.serializers import ChatRoomSerializer, ChatMessageSerializer, PrivateChatSerializer, PrivateMessageSerializer
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.template.defaultfilters import slugify
@@ -66,3 +68,41 @@ def room_view(request, slug):
     }
 
     return render(request, 'chat/room.html', context=context)
+
+
+@login_required
+def private_list_view(request):
+    private_rooms = PrivateChat.objects.filter(users=request.user)
+    if private_rooms.exists():
+        room_serializer = PrivateChatSerializer(private_rooms, many=True).data
+    else:
+        room_serializer = None
+
+    context = {
+        'private_rooms': room_serializer
+    }
+
+    return render(request, 'chat/private_list.html', context=context)
+
+
+@login_required
+def private_chat_view(request, username):
+    user = request.user
+    try:
+        target_user = User.objects.get(username=username)
+    except:
+        return redirect('home')
+    
+    try:
+        room = PrivateChat.objects.filter(users__in=[user, target_user])
+        room_messages = room[0].messages.all()
+        message_serializer = PrivateMessageSerializer(room_messages, many=True).data
+    except:
+        message_serializer = None
+
+    context = {
+        'target_user': UserSerializer(target_user).data,
+        'chat_messages': message_serializer,
+    }
+
+    return render(request, 'chat/private.html', context=context)

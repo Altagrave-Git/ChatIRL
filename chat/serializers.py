@@ -5,7 +5,7 @@ from chat.models import ChatRoom, ChatMessage, PrivateChat, PrivateMessage
 class ChatRoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChatRoom
-        fields = ['id', 'title', 'slug', 'description', 'last_message', 'timestamp', 'users']
+        fields = ['id', 'title', 'slug', 'description', 'last_message', 'timestamp', 'sticky', 'users']
 
 
 class ChatMessageSerializer(serializers.ModelSerializer):

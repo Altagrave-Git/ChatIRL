@@ -69,3 +69,13 @@ class User(AbstractBaseUser):
     @property
     def is_staff(self):
         return self.is_admin
+    
+    def delete(self, *args, **kwargs):
+        owned = self.owned.all()
+        if owned.exists():
+            for room in owned:
+                users = room.users.exclude(username=self.username).all()
+                if users.exists():
+                    room.transfer_ownership(new_owner=users[0])
+                else: room.delete()
+        super().delete(*args, **kwargs)

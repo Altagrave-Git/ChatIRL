@@ -4,24 +4,27 @@
 {% endblock %}
 
 {% block main %}
-    <div class="container-fluid px-0">
+    <div class="container">
+        <div class="py-1">
+            <h5 class="h5 mb-0 text-black-50">Private Chats</h5>
+        </div>
         {% if private_rooms %}
             {% for room in private_rooms %}
-                <div class="row">
-                    {% for username in room.usernames %}
-                        {% if username != request.user.username %}
+                {% for username in room.usernames %}
+                    {% if username != request.user.username %}
                         <a href="{% url 'private_list' %}{{username}}">
-                            <div class="rounded bg-light">
-                                <h6>{{username}}</h6>
-                                <p>{{room.last_message}}</p>
+                            <div class="row mx-auto col-lg-8 py-2 bg-white border border-secondary-subtle rounded-pill">
+                                <h6 class="mb-0">{{username}}</h6>
+                                <p class="mb-0">{{room.last_message}}</p>
                             </div>
                         </a>
-                        {% endif %}
-                    {% endfor %}
-                </div>
+                    {% endif %}
+                {% endfor %}
             {% endfor %}
         {% else %}
-
+            <div class="col-lg-8 bg-white border border-1 border-secondary-subtle rounded-pill mx-auto mt-2">
+                <h6 class="my-2 lead text-secondary">You haven't started any private chats!</h6>
+            </div>
         {% endif %}
     </div>
 {% endblock %}

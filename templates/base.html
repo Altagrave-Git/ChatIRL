@@ -19,11 +19,11 @@
     <script src="https://kit.fontawesome.com/ee788ab8f2.js" crossorigin="anonymous"></script>
   </head>
 
-  <body class="bg-light">
-    <nav class="navbar navbar-expand-md bg-dark bg-gradient navbar-dark border-bottom border-2 border-secondary position-fixed w-100 py-1 shadow">
+  <body class="bg-light bg-gradient">
+    <nav class="navbar navbar-expand-md bg-dark bg-gradient navbar-dark position-fixed w-100 py-0 shadow">
       <div class="container">
-        <a class="navbar-brand" href="{% url 'home' %}">
-          <img style="filter: invert(1)" src="{% static 'icon.svg' %}" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+        <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
+          <img style="filter: invert(1)" src="{% static 'icon.svg' %}" alt="Logo" width="30" height="24" class="d-inline-block align-text-top me-1">
           Chat IRL
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,6 +40,9 @@
             </li>
             <li class="nav-item">
               <a href="/users/u/{{request.user.username}}/" class="nav-link">Profile</a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'create_room' %}" class="nav-link">Create</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{% url 'logout' %}">Logout</a>

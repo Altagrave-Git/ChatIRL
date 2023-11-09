@@ -11,11 +11,14 @@ from django.template.defaultfilters import slugify
 @login_required
 def index(request):
     sticky = ChatRoom.objects.filter(sticky=True)
-    member = ChatRoom.objects.filter(users=request.user).exclude(sticky=True)
+    other = ChatRoom.objects.filter(sticky=False)
+    member = other.filter(users=request.user)
+    nonmember = other.exclude(users=request.user, private=False)
 
     context = {
         "sticky": ChatRoomSerializer(sticky, many=True).data,
-        "member": ChatRoomSerializer(member, many=True).data
+        "member": ChatRoomSerializer(member, many=True).data,
+        "nonmember": ChatRoomSerializer(nonmember, many=True).data
     }
 
     return render(request, 'chat/index.html', context=context)
@@ -25,9 +28,12 @@ def index(request):
 def create_view(request):
     if request.method == 'POST':
         title = request.POST.get('title')
+        description = request.POST.get('description')
+        private = request.POST.get('private')
 
-        if not title:
-            messages.error(request, 'Input room name')
+
+        if not title or not description:
+            messages.error(request, 'Input room name and description')
             return redirect('create_room')
         
         room = ChatRoom.objects.filter(slug=slugify(str(title)))
@@ -35,7 +41,17 @@ def create_view(request):
             messages.error(request, 'Room already exists')
             return redirect('create_room')
         
-        room = ChatRoom(title=title)
+        if private: private = True
+        else: private = False
+
+        if request.user.is_admin:
+            sticky = request.POST.get('sticky')
+            if sticky: sticky = True
+            else: sticky = False
+        else:
+            sticky = False
+        
+        room = ChatRoom(title=title, description=description, private=private, sticky=sticky)
         room.save()
         room.users.add(request.user)
 
@@ -57,8 +73,8 @@ def room_view(request, slug):
         room_messages.order_by('-id')[50:].delete()
     message_serializer = ChatMessageSerializer(room_messages, many=True)
 
-    sticky = ChatRoom.objects.filter(sticky=True)
-    member = ChatRoom.objects.filter(users=request.user).exclude(sticky=True)
+    sticky = ChatRoom.objects.filter(sticky=True).exclude(id=room.id)
+    member = ChatRoom.objects.filter(users=request.user).exclude(sticky=True).exclude(id=room.id)
     
     context = {
         "chat_room": room_serializer.data,

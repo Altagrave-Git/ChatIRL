@@ -12,12 +12,18 @@ class ChatRoom(models.Model):
     last_message = models.TextField(max_length=280, null=True, blank=True)
     timestamp = models.DateTimeField(null=True, blank=True)
     sticky = models.BooleanField(default=False)
+    private = models.BooleanField(default=False)
     invite = models.CharField(max_length=30, null=True, blank=True)
 
+    owner = models.ForeignKey(User, related_name='owned', on_delete=models.SET_NULL, null=True)
     users = models.ManyToManyField(User, related_name='rooms')
 
     def __str__(self):
         return self.title
+    
+    def transfer_ownership(self, new_owner):
+        self.owner = new_owner
+        self.save()
     
     def save(self, *args, **kwargs):
         if not self.slug:

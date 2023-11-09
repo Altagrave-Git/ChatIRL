@@ -29,30 +29,56 @@
             {% endif %}
         </div>
         <div class="col-12 col-lg-6 px-lg-3">
-            <div class="d-flex align-items-center mt-2">
-                <hr class="flex-grow-1">
-                <div class="mx-2">Rooms by Users</div>
-                <hr class="flex-grow-1">
-            </div>
             {% if member %}
-                {% for room in member %}
-                <div class="row">
-                    <a class="mx-auto mt-2" href="/room/{{room.slug}}/">
-                        <div class="border border-secondary-subtle rounded mx-auto bg-white shadow">
-                            <h5 class="mb-0 pt-2 text-warning">{{room.title}}</h5>
-                            <p class="mb-0 text-secondary pb-1">{{room.description}}</p>
-                            {% if room.last_message %}
-                                <div class="border-top rounded border-1 border-secondary-subtle py-1 m-0 bg-secondary-subtle bg-gradient text-secondary px-2">
-                                    {{room.last_message}}
-                                </div>
-                            {% else %}
-                                <div class="border-top rounded border-1 border-secondary-subtle py-1 m-0 bg-secondary-subtle bg-gradient text-secondary">
-                                    No messages...
-                                </div>
-                            {% endif %}
-                        </div>
-                    </a>
+                <div class="d-flex align-items-center mt-2">
+                    <hr class="flex-grow-1">
+                    <div class="mx-2">My Rooms</div>
+                    <hr class="flex-grow-1">
                 </div>
+                {% for room in member %}
+                    <div class="row">
+                        <a class="mx-auto mt-2" href="/room/{{room.slug}}/">
+                            <div class="border border-secondary-subtle rounded mx-auto bg-white shadow">
+                                <h5 class="mb-0 pt-2 text-warning">{{room.title}}</h5>
+                                <p class="mb-0 text-secondary pb-1">{{room.description}}</p>
+                                {% if room.last_message %}
+                                    <div class="border-top rounded border-1 border-secondary-subtle py-1 m-0 bg-secondary-subtle bg-gradient text-secondary px-2">
+                                        {{room.last_message}}
+                                    </div>
+                                {% else %}
+                                    <div class="border-top rounded border-1 border-secondary-subtle py-1 m-0 bg-secondary-subtle bg-gradient text-secondary">
+                                        No messages...
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            {% if nonmember %}
+                <div class="d-flex align-items-center mt-2">
+                    <hr class="flex-grow-1">
+                    <div class="mx-2">Rooms by Users</div>
+                    <hr class="flex-grow-1">
+                </div>
+                {% for room in nonmember %}
+                    <div class="row">
+                        <a class="mx-auto mt-2" href="/room/{{room.slug}}/">
+                            <div class="border border-secondary-subtle rounded mx-auto bg-white shadow">
+                                <h5 class="mb-0 pt-2 text-success">{{room.title}}</h5>
+                                <p class="mb-0 text-secondary pb-1">{{room.description}}</p>
+                                {% if room.last_message %}
+                                    <div class="border-top rounded border-1 border-secondary-subtle py-1 m-0 bg-secondary-subtle bg-gradient text-secondary px-2">
+                                        {{room.last_message}}
+                                    </div>
+                                {% else %}
+                                    <div class="border-top rounded border-1 border-secondary-subtle py-1 m-0 bg-secondary-subtle bg-gradient text-secondary">
+                                        No messages...
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </a>
+                    </div>
                 {% endfor %}
             {% endif %}
         </div>

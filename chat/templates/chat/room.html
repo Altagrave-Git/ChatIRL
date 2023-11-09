@@ -4,9 +4,20 @@
 {% endblock %}
 
 {% block main %}
-    <section class="col-lg-3 border-1 border-end">
+    <section class="col-lg-3">
         <div class="p-0" id="room-list-container">
             <h6 class="text-secondary text-start ms-2 mt-2">Chat Rooms</h6>
+            <a href="/room/{{chat_room.slug}}/">
+                {% if chat_room.sticky is True %}
+                    <div class="border border-1 border-primary rounded py-3 mt-2 mx-2 bg-primary-subtle shadow-sm">
+                        <h6 class="text-primary mb-0">{{chat_room.title}}</h6>
+                    </div>
+                {% else %}
+                    <div class="border border-1 border-warning rounded py-3 mt-2 mx-2 bg-warning-subtle shadow-sm">
+                        <h6 class="text-warning-emphasis mb-0">{{chat_room.title}}</h6>
+                    </div>
+                {% endif %}
+            </a>
             {% if sticky %}
                 {% for room in sticky %}
                     <a href="/room/{{room.slug}}/">
@@ -29,7 +40,7 @@
     </section>
 
     <section class="col-12 col-lg-6 d-flex flex-column flex-grow-1 pb-5 bg-white">
-        <div class="flex-grow-1 d-flex flex-column px-2 pb-3" id="chat-log">
+        <div class="flex-grow-1 d-flex flex-column px-2 pb-3 border-start border-end border-1" id="chat-log">
             {% for message in chat_messages %}
                 {% if message.username == request.user.username %}
                     <div class="chat-room-message message-self align-self-end my-1 px-3 py-2 rounded bubble-{{message.color}}">
@@ -45,23 +56,23 @@
             {% endfor %}
         </div>
 
-        <div class="fixed-bottom container">
-            <div class="col-lg-6 mx-auto bg-light py-2 px-3 d-flex rounded">
-                <input class="form-control me-2" type="text" name="message" id="message" maxlength="280">
+        <div id="chat-bar" class="fixed-bottom container">
+            <div class="col-lg-6 mx-auto bg-light py-2 px-0 d-flex border-top">
+                <input class="form-control me-2 rounded-pill" type="text" name="message" id="message" maxlength="280">
                 <button class="btn btn-warning" id="submit">Send</button>
             </div>
         </div>
     </section>
 
-    <section class="col-lg-3 border border-top-0 border-bottom-0">
-        <table class="table table-hover mb-0" id="user-list-container">
+    <section class="col-lg-3">
+        <table class="table table-hover mb-0 border-end border-1" id="user-list-container">
             <thead>
                 <tr>
                     <th class="col text-secondary text-start bg-secondary-subtle bg-gradient text-secondary">Online</th>
                 </tr>
             </thead>
             <tbody id="user-list">
-
+                
             </tbody>
         </table>
     </section>
@@ -69,6 +80,74 @@
     {{ chat_room.slug|json_script:"room-name" }}
 
     <script>
+        const main = document.querySelector("main");
+        const roomList = document.getElementById('room-list-container');
+        const userList = document.getElementById('user-list-container');
+
+        let swipe = 0;
+        let startX = null;
+
+        main.addEventListener("touchstart", (e) => {
+            startX = e.touches[0].clientX;
+        })
+
+        main.addEventListener("touchend", (e) => {
+            if (startX === null) return;
+
+            const endX = e.changedTouches[0].clientX;
+            const diffX = endX - startX;
+
+            if (Math.abs(diffX) > 60) {
+                if (diffX > 0) {
+                    if (swipe < 0) {
+                        roomList.style.transform = "translateX(-100%)";
+                        userList.style.transform = "translateX(0)";
+                        swipe++;
+                    } else {
+                        roomList.style.transform = "translateX(0)";
+                        userList.style.transform = "translateX(0)";
+                        if (swipe === 0) {
+                            swipe++;
+                        }
+                    }
+                } else if (diffX < 0) {
+                    if (swipe > 0) {
+                        roomList.style.transform = "translateX(-100%)";
+                        userList.style.transform = "translateX(0)";
+                        swipe--;
+                    } else {
+                        roomList.style.transform = "translateX(-100%)";
+                        userList.style.transform = "translateX(-100%)";
+                        if (swipe === 0) {
+                            swipe--;
+                        }
+                    }
+                }
+            } else {
+                if (swipe === 1) {
+                    roomList.style.transform = "translateX(0)";
+                    userList.style.transform = "translateX(0)";
+                }
+                if (swipe === 0) {
+                    roomList.style.transform = "translateX(-100%)";
+                    userList.style.transform = "translateX(0)";
+                }
+                if (swipe === -1) {
+                    roomList.style.transform = "translateX(-100%)";
+                    userList.style.transform = "translateX(-100%)";
+                }
+            }
+
+            startX = null;
+        })
+
+        window.addEventListener("resize", (e) => {
+            swipe = 0;
+            startX = null;
+            roomList.style.transform = "";
+            userList.style.transform = "";
+        })
+
         const scrollToEnd = () => {
             window.scrollTo(0, document.body.scrollHeight);
         }
@@ -111,7 +190,14 @@
                 for (const u of data.connected_users) {
                     userList.innerHTML += `
                     <tr id="user-${u}">
-                        <td><a href="/users/u/${u}/">${u}</a></td>
+                        <td class="container">
+                            <a href="/users/u/${u}/" class="row gx-0">
+                                <div class="col-11">${u}</div>
+                                <div class="col-1 d-flex align-items-center justify-content-center px-1">
+                                    <div class="w-50 ratio ratio-1x1 h-auto rounded-circle bg-success"></div>
+                                </div>
+                            </a>
+                        </td>
                     </tr>
                     `
                 }
@@ -132,10 +218,12 @@
         document.querySelector('#submit').onclick = function(e) {
             const messageInputDom = document.querySelector('#message');
             const message = messageInputDom.value;
-            chatSocket.send(JSON.stringify({
-                'message': message
-            }));
-            messageInputDom.value = '';
+            if (message.length) {
+                chatSocket.send(JSON.stringify({
+                    'message': message
+                }));
+                messageInputDom.value = '';
+            }
         };
     </script>
 {% endblock %}

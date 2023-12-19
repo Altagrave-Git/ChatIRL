@@ -45,25 +45,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'main.urls'
 
-if DEBUG:
-    CORS_ALLOWED_ORIGINS = [
-        'http://127.0.0.1:3000',
-        'http://localhost:3000',
-        'https://turcotte.tech',
-        'https://www.turcotte.tech',
-        'https://api.turcotte.tech',
-        'https://echonetwork.app',
-        'https://www.echonetwork.app',
-    ]
-
-else:
-    CORS_ALLOWED_ORIGINS = [
-        'https://turcotte.tech',
-        'https://www.turcotte.tech',
-        'https://api.turcotte.tech',
-        'https://echonetwork.app',
-        'https://www.echonetwork.app',
-    ]
+CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOW_CREDENTIALS = True
 
@@ -145,12 +127,12 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
 
-MEDIA_URL = '/media/'
+# MEDIA_URL = '/media/'
 
-if DEBUG:
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-else:
-    MEDIA_ROOT = os.environ.get('MEDIA_ROOT')
+# if DEBUG:
+#     MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# else:
+#     MEDIA_ROOT = os.environ.get('MEDIA_ROOT')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

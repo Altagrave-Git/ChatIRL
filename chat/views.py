@@ -13,7 +13,7 @@ def index(request):
     sticky = ChatRoom.objects.filter(sticky=True)
     other = ChatRoom.objects.filter(sticky=False)
     member = other.filter(users=request.user)
-    nonmember = other.exclude(users=request.user, private=False)
+    nonmember = other.exclude(private=True).exclude(users=request.user)
 
     context = {
         "sticky": ChatRoomSerializer(sticky, many=True).data,
@@ -75,12 +75,14 @@ def room_view(request, slug):
 
     sticky = ChatRoom.objects.filter(sticky=True).exclude(id=room.id)
     member = ChatRoom.objects.filter(users=request.user).exclude(sticky=True).exclude(id=room.id)
+    nonmember = ChatRoom.objects.exclude(private=True).exclude(sticky=True).exclude(users=request.user).exclude(id=room.id)
     
     context = {
         "chat_room": room_serializer.data,
         "chat_messages": message_serializer.data,
         "sticky": ChatRoomSerializer(sticky, many=True).data,
-        "member": ChatRoomSerializer(member, many=True).data
+        "member": ChatRoomSerializer(member, many=True).data,
+        "nonmember": ChatRoomSerializer(nonmember, many=True).data
     }
 
     return render(request, 'chat/room.html', context=context)

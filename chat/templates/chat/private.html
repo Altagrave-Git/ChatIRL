@@ -6,7 +6,8 @@
 {% block main %}
     <section class="col-lg-3"></section>
     <section class="col-12 col-lg-6 d-flex flex-column flex-grow-1 pb-5">
-        <div class="flex-grow-1 d-flex flex-column px-2 pb-3" id="chat-log">
+        <div class="bubble-{{target_user.color}}"><p class="mb-0 py-2"><div><h5>{{target_user.username}}</h5></div></p></div>
+        <div class="flex-grow-1 d-flex flex-column px-2 pb-3 bg-white" id="chat-log">
             {% for message in chat_messages %}
                 {% if message.username == request.user.username %}
                     <div class="chat-room-message message-self align-self-end my-1 px-3 py-2 rounded bubble-{{message.color}}">

@@ -36,6 +36,15 @@
                     </a>
                 {% endfor %}
             {% endif %}
+            {% if nonmember %}
+                {% for room in nonmember %}
+                    <a href="/room/{{room.slug}}/">
+                        <div class="border border-1 border-secondary-subtle rounded py-3 mt-2 mx-2 bg-white shadow-sm">
+                            <h6 class="text-success mb-0">{{room.title}}</h6>
+                        </div>
+                    </a>
+                {% endfor %}
+            {% endif %}
         </div>
     </section>
 
